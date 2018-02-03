@@ -1,0 +1,14 @@
+{
+  "name": "toy-problems",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/brooksbenson/toy-problems.git",
+  "author": "Brooks Benson <brooksbenson01@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "test": "mocha **/*.test.js --watch"
+  },
+  "dependencies": {
+    "mocha": "^5.0.0"
+  }
+}
