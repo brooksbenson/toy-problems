@@ -13,3 +13,31 @@ test('should successfully create a keyed alphabet when key contains repeating le
   const actualResult = ragbabyModule.createKeyedAlphabet(key);
   expect(actualResult).toBe(expectedResult);
 });
+
+test('should successfully encode the text "cipher" when given the key "cipher"', () => {
+  const key = 'cipher';
+  const expectedResult = "ihrbfj";
+  const actualResult = ragbabyModule.encode('cipher', key);
+  expect(actualResult).toBe(expectedResult);
+});
+
+test('should successfully encode the text "cipher" when given the key "cipher" with repeating letters', () => {
+  const key = 'cccciiiipherrrr';
+  const expectedResult = "ihrbfj";
+  const actualResult = ragbabyModule.encode('cipher', key);
+  expect(actualResult).toBe(expectedResult);
+});
+
+test('should successfully decode the text "ihrbfj" when given the key "cipher"', () => {
+  const key = 'cipher';
+  const expectedResult = 'cipher';
+  const actualResult = ragbabyModule.decode('ihrbfj', key);
+  expect(actualResult).toBe(expectedResult);
+});
+
+test('should successfully decode the text "ihrbfj" when given the key "cipher"', () => {
+  const key = 'cipher';
+  const expectedResult = 'cipher';
+  const actualResult = ragbabyModule.decode('ihrbfj', key);
+  expect(actualResult).toBe(expectedResult);
+});
