@@ -1,17 +1,21 @@
 const ragbabyModule = require('./ragbaby-cipher');
 
-test('should successfully create a keyed alphabet', () => {
+test('should successfully create keyed alphabets', () => {
   const key = 'test';
-  const expectedResult = 'testabcdfghijklmnopqruvwxyz';
-  const actualResult = ragbabyModule.createKeyedAlphabet(key);
-  expect(actualResult).toBe(expectedResult);
+  const correctLowerKeyedAlphabet = 'testabcdfghijklmnopqruvwxyz';
+  const correctUpperKeyedAlphabet = correctLowerKeyedAlphabet.toUpperCase();
+  const { lowerAlpha, upperAlpha } = ragbabyModule.createKeyedAlphabet(key);
+  expect(lowerAlpha).toBe(correctLowerKeyedAlphabet);
+  expect(upperAlpha).toBe(correctUpperKeyedAlphabet);
 });
 
-test('should successfully create a keyed alphabet when key contains repeating letters', () => {
-  const key = 'ttteeeesssstttt';
-  const expectedResult = 'testabcdfghijklmnopqruvwxyz';
-  const actualResult = ragbabyModule.createKeyedAlphabet(key);
-  expect(actualResult).toBe(expectedResult);
+test('should successfully create keyed alphabets when key has repeating letters', () => {
+  const key = 'tttesssst';
+  const correctLowerKeyedAlphabet = 'testabcdfghijklmnopqruvwxyz';
+  const correctUpperKeyedAlphabet = correctLowerKeyedAlphabet.toUpperCase();
+  const { lowerAlpha, upperAlpha } = ragbabyModule.createKeyedAlphabet(key);
+  expect(lowerAlpha).toBe(correctLowerKeyedAlphabet);
+  expect(upperAlpha).toBe(correctUpperKeyedAlphabet);
 });
 
 test('should successfully encode the text "cipher" when given the key "cipher"', () => {

@@ -9,8 +9,9 @@
 //with the letter in the keyed alphabet the corresponding number of places to the
 //right of it (wrapping if necessary). Non-alphabetic characters are preserved.
 
-const createKeyedAlphabet = (key) => {
+const createKeyedAlphabet = function(key) {
   const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+  const payload = new Object();
 
   let trimmedKey = ''; //recreates the key with repeating letters removed 
   for (let i = 0; i < key.length; i++) {
@@ -18,32 +19,45 @@ const createKeyedAlphabet = (key) => {
       trimmedKey += key[i];
     }
   }
-  
-  return trimmedKey + alphabet.replace(new RegExp(`[${trimmedKey}]`, 'g'), '');
+
+  const keyedAlphabet = trimmedKey + alphabet.replace(new RegExp(`[${trimmedKey}]`, 'gi'), '');
+  payload.lowerAlpha = keyedAlphabet;
+  payload.upperAlpha = keyedAlphabet.toUpperCase();
+  return payload;
 };
 
-const encode = (text, key) => {
-  const keyedAlphabet = createKeyedAlphabet(key);
-  
-  return text.split(' ').map(word => {
-    return word.split('').map((char, i) => {
-      return /\W/.test(char) //checks if the character is non-alphabetic
-        ? char
-        : keyedAlphabet[keyedAlphabet.indexOf(char) + i + 1];
-    }).join('');
-  }).join(' ');
+//needs to wrap if char index + right positions is greater than 25
+
+const encode = function(text, key) {
+  const { lowerAlpha, upperAlpha } = createKeyedAlphabet(key);
+  const words = text.match(/\w+/g);
+  let encodedWords = words.map(word => {
+    let encodedWord = '';
+    for (let i = 0; i < word.length; i++) {
+      let char = word[i];
+      lowerAlpha.includes(char)
+        ? encodedWord += lowerAlpha[lowerAlpha.indexOf(char) + i + 1]
+        : encodedWord += upperAlpha[upperAlpha.indexOf(char) + i + 1]
+    }
+    return encodedWord;
+  });
+  return text.replace(/\w+/g, encodedWords.shift());
 };
 
-const decode = (text, key) => {
-  const keyedAlphabet = createKeyedAlphabet(key);
-
-  return text.split(' ').map(word => {
-    return word.split('').map((char, i) => {
-      return /\W/.test(char)
-        ? char
-        : keyedAlphabet[keyedAlphabet.indexOf(char) - i - 1]
-    }).join('');
-  }).join(' ');
+const decode = function(text, key) {
+  const { lowerAlpha, upperAlpha } = createKeyedAlphabet(key);
+  const words = text.match(/\w+/g);
+  let decodedWords = words.map(word => {
+    let decodedWord = '';
+    for (let i = 0; i < word.length; i++) {
+      let char = word[i];
+      lowerAlpha.includes(char)
+        ? decodedWord += lowerAlpha[lowerAlpha.indexOf(char) - i - 1]
+        : decodedWord += upperAlpha[upperAlpha.indexOf(char) - i - 1]
+    }
+    return decodedWord;
+  })
+  return text.replace(/\w+/g, decodedWords.shift());
 };
 
 module.exports = {
