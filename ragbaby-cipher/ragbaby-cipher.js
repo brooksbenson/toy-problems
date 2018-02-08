@@ -9,33 +9,33 @@
 //with the letter in the keyed alphabet the corresponding number of places to the
 //right of it (wrapping if necessary). Non-alphabetic characters are preserved.
 
-//make sure keyed alphabet is being created correctly
+//refactor solution
 
 const createKeyedAlphabet = function(key) {
   const alphabet = 'abcdefghijklmnopqrstuvwxyz';
-
-  let trimmedKey = ''; //recreates the key with repeating letters removed 
-  for (let i = 0; i < key.length; i++) {
-    if (trimmedKey[trimmedKey.length-1] !== key[i]) {
-      trimmedKey += key[i];
-    }
-  }
-
+  let trimmedKey = key.split('').reduce((newKey, char) => {
+    if (!newKey.includes(char)) newKey += char;
+    return newKey;
+  }, '');
   return trimmedKey + alphabet.replace(new RegExp(`[${trimmedKey}]`, 'gi'), '');
 };
+
 
 const encode = function(text, key) {
   const keyedAlphabet = createKeyedAlphabet(key);
   const words = text.match(/\w+/g);
+
   let encodedWords = words.map(word => {
     return word.split('').map((oldChar, i) => {
       let newCharIndex = keyedAlphabet.indexOf(oldChar.toLowerCase()) + i + 1;
-      if (newCharIndex > 25) newCharIndex -= 25;
+      newCharIndex -= 26 * Math.floor(newCharIndex / 26);
+
       return oldChar === oldChar.toUpperCase() 
         ? keyedAlphabet[newCharIndex].toUpperCase()
         : keyedAlphabet[newCharIndex] 
     }).join('');
   });
+
   return text.replace(/\w+/g, () => encodedWords.shift());
 };
 
@@ -45,7 +45,7 @@ const decode = function(text, key) {
   let decodedWords = words.map(word => {
    return word.split('').map((oldChar, i) => {
      let newCharIndex = keyedAlphabet.indexOf(oldChar.toLowerCase()) - i - 1;
-     if (newCharIndex < 0) newCharIndex += 25;
+     newCharIndex += 26 * Math.ceil(newCharIndex / -26);
      return oldChar === oldChar.toUpperCase() 
        ? keyedAlphabet[newCharIndex].toUpperCase()
        : keyedAlphabet[newCharIndex] 

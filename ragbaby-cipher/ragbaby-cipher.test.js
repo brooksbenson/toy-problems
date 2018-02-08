@@ -2,14 +2,14 @@ const ragbabyModule = require('./ragbaby-cipher');
 
 test('should successfully create keyed alphabets', () => {
   const key = 'test';
-  const correctReturnValue = 'testabcdfghijklmnopqruvwxyz';
+  const correctReturnValue = 'tesabcdfghijklmnopqruvwxyz';
   const returnedValue = ragbabyModule.createKeyedAlphabet(key);
   expect(returnedValue).toBe(correctReturnValue);
 });
 
 test('should successfully create keyed alphabets when key has repeating letters', () => {
   const key = 'ttttesssst';
-  const correctReturnValue = 'testabcdfghijklmnopqruvwxyz';
+  const correctReturnValue = 'tesabcdfghijklmnopqruvwxyz';
   const returnedValue = ragbabyModule.createKeyedAlphabet(key);
   expect(returnedValue).toBe(correctReturnValue);
 });
@@ -56,4 +56,13 @@ test('should successfully decode the result of encoding "This is an example"', (
   const encoded = encode(message, key);
   const decoded = decode(encoded, key);
   expect(decoded).toBe(message);
+});
+
+test('should successfully encode the result of decoding "This is an example"', () => {
+  const {encode, decode} = ragbabyModule;
+  const key = 'secretkey';
+  const message = 'This is an example';
+  const decoded = decode(message, key);
+  const encoded = encode(decoded, key);
+  expect(encoded).toBe(message);
 });
