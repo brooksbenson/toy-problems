@@ -9,9 +9,10 @@
 //with the letter in the keyed alphabet the corresponding number of places to the
 //right of it (wrapping if necessary). Non-alphabetic characters are preserved.
 
+//make sure keyed alphabet is being created correctly
+
 const createKeyedAlphabet = function(key) {
   const alphabet = 'abcdefghijklmnopqrstuvwxyz';
-  const payload = new Object();
 
   let trimmedKey = ''; //recreates the key with repeating letters removed 
   for (let i = 0; i < key.length; i++) {
@@ -20,44 +21,37 @@ const createKeyedAlphabet = function(key) {
     }
   }
 
-  const keyedAlphabet = trimmedKey + alphabet.replace(new RegExp(`[${trimmedKey}]`, 'gi'), '');
-  payload.lowerAlpha = keyedAlphabet;
-  payload.upperAlpha = keyedAlphabet.toUpperCase();
-  return payload;
+  return trimmedKey + alphabet.replace(new RegExp(`[${trimmedKey}]`, 'gi'), '');
 };
 
-//needs to wrap if char index + right positions is greater than 25
-
 const encode = function(text, key) {
-  const { lowerAlpha, upperAlpha } = createKeyedAlphabet(key);
+  const keyedAlphabet = createKeyedAlphabet(key);
   const words = text.match(/\w+/g);
   let encodedWords = words.map(word => {
-    let encodedWord = '';
-    for (let i = 0; i < word.length; i++) {
-      let char = word[i];
-      lowerAlpha.includes(char)
-        ? encodedWord += lowerAlpha[lowerAlpha.indexOf(char) + i + 1]
-        : encodedWord += upperAlpha[upperAlpha.indexOf(char) + i + 1]
-    }
-    return encodedWord;
+    return word.split('').map((oldChar, i) => {
+      let newCharIndex = keyedAlphabet.indexOf(oldChar.toLowerCase()) + i + 1;
+      if (newCharIndex > 25) newCharIndex -= 25;
+      return oldChar === oldChar.toUpperCase() 
+        ? keyedAlphabet[newCharIndex].toUpperCase()
+        : keyedAlphabet[newCharIndex] 
+    }).join('');
   });
-  return text.replace(/\w+/g, encodedWords.shift());
+  return text.replace(/\w+/g, () => encodedWords.shift());
 };
 
 const decode = function(text, key) {
-  const { lowerAlpha, upperAlpha } = createKeyedAlphabet(key);
+  const keyedAlphabet = createKeyedAlphabet(key);
   const words = text.match(/\w+/g);
   let decodedWords = words.map(word => {
-    let decodedWord = '';
-    for (let i = 0; i < word.length; i++) {
-      let char = word[i];
-      lowerAlpha.includes(char)
-        ? decodedWord += lowerAlpha[lowerAlpha.indexOf(char) - i - 1]
-        : decodedWord += upperAlpha[upperAlpha.indexOf(char) - i - 1]
-    }
-    return decodedWord;
-  })
-  return text.replace(/\w+/g, decodedWords.shift());
+   return word.split('').map((oldChar, i) => {
+     let newCharIndex = keyedAlphabet.indexOf(oldChar.toLowerCase()) - i - 1;
+     if (newCharIndex < 0) newCharIndex += 25;
+     return oldChar === oldChar.toUpperCase() 
+       ? keyedAlphabet[newCharIndex].toUpperCase()
+       : keyedAlphabet[newCharIndex] 
+    }).join('');
+  });
+  return text.replace(/\w+/g, () => decodedWords.shift());
 };
 
 module.exports = {
