@@ -11,15 +11,10 @@
 
 //refactor solution
 
-const createKeyedAlphabet = function(key) {
-  const alphabet = 'abcdefghijklmnopqrstuvwxyz';
-  let trimmedKey = key.split('').reduce((newKey, char) => {
-    if (!newKey.includes(char)) newKey += char;
-    return newKey;
-  }, '');
-  return trimmedKey + alphabet.replace(new RegExp(`[${trimmedKey}]`, 'gi'), '');
-};
-
+function createKeyedAlphabet(key) {
+  key = new Set(key);
+  return [...key].concat([...'abcdefghijklmnopqrstuvwxyz'].filter(x => !key.has(x))).join``;
+}
 
 const encode = function(text, key) {
   const keyedAlphabet = createKeyedAlphabet(key);
@@ -29,7 +24,6 @@ const encode = function(text, key) {
     return word.split('').map((oldChar, i) => {
       let newCharIndex = keyedAlphabet.indexOf(oldChar.toLowerCase()) + i + 1;
       newCharIndex -= 26 * Math.floor(newCharIndex / 26);
-
       return oldChar === oldChar.toUpperCase() 
         ? keyedAlphabet[newCharIndex].toUpperCase()
         : keyedAlphabet[newCharIndex] 
@@ -42,6 +36,7 @@ const encode = function(text, key) {
 const decode = function(text, key) {
   const keyedAlphabet = createKeyedAlphabet(key);
   const words = text.match(/\w+/g);
+
   let decodedWords = words.map(word => {
    return word.split('').map((oldChar, i) => {
      let newCharIndex = keyedAlphabet.indexOf(oldChar.toLowerCase()) - i - 1;
@@ -51,6 +46,7 @@ const decode = function(text, key) {
        : keyedAlphabet[newCharIndex] 
     }).join('');
   });
+
   return text.replace(/\w+/g, () => decodedWords.shift());
 };
 

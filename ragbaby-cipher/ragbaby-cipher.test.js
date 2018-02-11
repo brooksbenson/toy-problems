@@ -1,4 +1,4 @@
-const ragbabyModule = require('./ragbaby-cipher');
+const ragbabyModule = require('./ragbaby-cipher2');
 
 test('should successfully create keyed alphabets', () => {
   const key = 'test';
