@@ -1,7 +1,8 @@
 // updated solution
 function createKeyedAlphabet(key) {
   key = new Set(key); //set creates a collection of unique values
-  return [...key].join`` + [...'abcdefghijklmnopqrstuvwxyz'].filter(x => !key.has(x)).join``;
+  let abcz = [...'abcdefghijklmnopqrstuvwxyz'].filter(x => !key.has(x));
+  return [...key].join`` + [...abcz].join``;
 }
 
 function encode(text, key) {
@@ -31,8 +32,7 @@ function decode(text, key) {
       return c;
     }
     let $ = c.toLowerCase();
-    let newIdx = (abcz.indexOf($) - ++i) % 26;
-    if (newIdx < 0) newIdx = 26 - (newIdx % 26 * -1);
+    let newIdx = (26*5 + abcz.indexOf($) - ++i) % 26;
     return /[A-Z]/.test(c) 
       ? abcz[newIdx].toUpperCase()
       : abcz[newIdx];
