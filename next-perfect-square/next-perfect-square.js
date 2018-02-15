@@ -5,7 +5,7 @@
 
 function findNextSquare(sq) {
   let sqRoot = Math.sqrt(sq);
-  return sqRoot % 1 ? -1 : ++sqRoot * sqRoot;
+  return sqRoot % 1 ? -1 : ++sqRoot ** 2;
 }
 
 module.exports = findNextSquare;
