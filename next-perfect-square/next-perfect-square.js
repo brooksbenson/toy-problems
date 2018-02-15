@@ -3,9 +3,6 @@
 
 //a perfect square is an integer such that sqrt(integer) produces an integer
 
-function findNextSquare(sq) {
-  let sqRoot = Math.sqrt(sq);
-  return sqRoot % 1 ? -1 : ++sqRoot ** 2;
-}
+const findNextSquare = n => Math.sqrt(n) % 1 ? -1 : Math.sqrt(n) ** 2;
 
 module.exports = findNextSquare;
