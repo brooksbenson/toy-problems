@@ -14,3 +14,5 @@ function add(a, b) {
   });
   return product.reverse().join``;
 }
+
+module.exports = add;
