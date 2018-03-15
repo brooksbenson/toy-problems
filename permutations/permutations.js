@@ -1,19 +1,27 @@
 /*
-  A set or number of things can be ordered or arranged 
-  a finite number of ways. A permutation is one of the
-  possible arrangements of a set.
+  A set of things can be ordered or arranged 
+  a finite number of ways. A permutation is 
+  one of the possible arrangements of a set.
 
   The permutations function defines a string as its
   parameter and returns every unique permutation
-  of that string.
+  of that string stored in an array.
 */
 
 function permutations(s) {
-  return function build(set, perms) {
-    if (set.length === 0) return perms; 
+  let perms = new Set();
+  
+  (function build(perm, set) {
+    if (perm.length === s.length) {
+      perms.add(perm);
+      return;
+    }
     set.forEach((c, i) => {
-      let root = !perms.length ? [c] : [...perms];
-      let newSet = [...set].splice(i, 1);
+      let newSet = [...set];
+      newSet.splice(i, 1);
+      build(perm + c, newSet);
     });
-  }([...s], []);
+  })('', [...s]);
+  
+  return [...perms];
 }
